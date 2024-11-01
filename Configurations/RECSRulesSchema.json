@@ -1,0 +1,175 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RECS Rules Schema",
+  "type": "object",
+  "properties": {
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Unique name of the rule."
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10,
+            "description": "Optional rule priority, an integer between 0 and 10."
+          },
+          "conditions": {
+            "type": "object",
+            "description": "Defines condition groups using 'all' or 'any'.",
+            "oneOf": [
+              {
+                "properties": {
+                  "all": { "$ref": "#/definitions/conditionGroup" }
+                },
+                "required": [ "all" ]
+              },
+              {
+                "properties": {
+                  "any": { "$ref": "#/definitions/conditionGroup" }
+                },
+                "required": [ "any" ]
+              }
+            ]
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/action"
+            },
+            "description": "Actions to perform if conditions are met."
+          },
+          "expressions": {
+            "type": "object",
+            "description": "Expressions defined for complex calculations in C#.",
+            "additionalProperties": {
+              "$ref": "#/definitions/expression"
+            }
+          }
+        },
+        "required": [ "name", "conditions", "actions" ]
+      }
+    }
+  },
+  "required": [ "rules" ],
+  "definitions": {
+    "conditionGroup": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "$ref": "#/definitions/condition" },
+          { "$ref": "#/definitions/nestedConditionGroup" }
+        ]
+      }
+    },
+    "condition": {
+      "type": "object",
+      "properties": {
+        "fact": {
+          "type": "string",
+          "description": "Name of the fact, recommended to use 'channel' based names.",
+          "pattern": "^[^:]+$"
+        },
+        "operator": {
+          "type": "string",
+          "enum": [
+            "EQ",
+            "NEQ",
+            "LT",
+            "LTE",
+            "GT",
+            "GTE",
+            "CONTAINS",
+            "NOT_CONTAINS"
+          ],
+          "description": "Comparison operator."
+        },
+        "value": {
+          "description": "Value to compare against, or an expression reference in `{expression_name}` format.",
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^\\{[a-zA-Z_][a-zA-Z0-9_]*\\}$"
+            },
+            { "type": "string" },
+            { "type": "number" },
+            { "type": "boolean" }
+          ]
+        }
+      },
+      "required": [ "fact", "operator", "value" ]
+    },
+    "nestedConditionGroup": {
+      "type": "object",
+      "properties": {
+        "all": { "$ref": "#/definitions/conditionGroup" },
+        "any": { "$ref": "#/definitions/conditionGroup" }
+      },
+      "oneOf": [
+        { "required": [ "all" ] },
+        { "required": [ "any" ] }
+      ],
+      "description": "Nested condition group with either 'all' or 'any'."
+    },
+    "action": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [ "updateStore", "sendMessage" ],
+          "description": "Type of action."
+        },
+        "target": {
+          "type": "string",
+          "description": "Target to update or send message to."
+        },
+        "value": {
+          "description": "Value to update or send, can reference an expression with `{expression_name}` format.",
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^\\{[a-zA-Z_][a-zA-Z0-9_]*\\}$"
+            },
+            { "type": "string" },
+            { "type": "number" },
+            { "type": "boolean" }
+          ]
+        },
+        "customProperty": {
+          "type": "object",
+          "description": "Optional custom properties for the action.",
+          "additionalProperties": {
+            "anyOf": [
+              { "type": "string" },
+              { "type": "number" },
+              { "type": "boolean" },
+              { "type": "object" },
+              { "type": "array" }
+            ]
+          }
+        }
+      },
+      "required": [ "type", "target", "value" ]
+    },
+    "expression": {
+      "type": "object",
+      "properties": {
+        "params": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Parameters used in the expression."
+        },
+        "body": {
+          "type": "string",
+          "description": "C# code body for the expression.",
+          "pattern": "^[^;]+$"
+        }
+      },
+      "required": [ "params", "body" ]
+    }
+  }
+}

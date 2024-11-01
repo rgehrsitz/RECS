@@ -9,4 +9,10 @@
     <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Config\" />
+    <Folder Include="Utils\" />
+  </ItemGroup>
+
 </Project>

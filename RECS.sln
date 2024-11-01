@@ -13,6 +13,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RECS.Common", "RECS.Common\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RECS.Tests", "RECS.Tests\RECS.Tests.csproj", "{41C83569-2AF5-40BC-A893-ABFC17AF005E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configurations", "{6AD1ED6F-7C0E-4587-B4A1-063267BB4B94}"
+	ProjectSection(SolutionItems) = preProject
+		RECSRulesSchema.json = RECSRulesSchema.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{92782CF9-661F-4B62-8811-C34653BE7670}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{6DDADAE5-932A-4A0D-9ECC-8397067A7EFD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{1B4DAF8F-8090-495C-8322-163A8CCD7DE7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logs", "Logs", "{28B48EB1-1316-4288-B1CF-351E5C0470FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
